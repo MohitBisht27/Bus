@@ -16,8 +16,14 @@ import auditRoutes from './routes/audit.routes';
 
 const app: Application = express();
 
-// Middlewares
-app.use(cors());
+// Middlewares - Permissive CORS to allow Netlify frontend and custom domains
+const corsOrigin = process.env.CORS_ORIGIN || '*';
+app.use(
+  cors({
+    origin: corsOrigin === '*' ? true : corsOrigin.split(','),
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 if (process.env.NODE_ENV !== 'test') {

@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: omnibus-backend
+    env: node
+    plan: free
+    buildCommand: cd server && npm install --legacy-peer-deps && npm run build
+    startCommand: cd server && npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        value: mongodb+srv://bishtmohit2023:Draco123@cluster0.vwd5bga.mongodb.net/bus_booking?retryWrites=true&w=majority
+      - key: JWT_SECRET
+        value: super_secret_jwt_key_for_bus_booking_system_2026_mern
+      - key: CORS_ORIGIN
+        value: "*"
