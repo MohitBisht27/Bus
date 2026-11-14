@@ -50,7 +50,22 @@ app.use('/api/reports', reportRoutes);
 app.use('/api/policies', policyRoutes);
 app.use('/api/audit-logs', auditRoutes);
 
-// Catch-all 404 handler
+// Optional: Serve client production build if available
+import path from 'path';
+import fs from 'fs';
+
+const clientDistPath = path.resolve(__dirname, '../../client/dist');
+if (fs.existsSync(clientDistPath)) {
+  app.use(express.static(clientDistPath));
+  app.get('*', (req: Request, res: Response, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/api-docs')) {
+      return next();
+    }
+    res.sendFile(path.join(clientDistPath, 'index.html'));
+  });
+}
+
+// Catch-all 404 handler for API routes
 app.use((req: Request, res: Response) => {
   res.status(404).json({
     success: false,
